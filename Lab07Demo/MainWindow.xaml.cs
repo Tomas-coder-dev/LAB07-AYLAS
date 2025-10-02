@@ -20,5 +20,10 @@ namespace Lab07Demo
         {
             InitializeComponent();
         }
+
+        private void Read_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
