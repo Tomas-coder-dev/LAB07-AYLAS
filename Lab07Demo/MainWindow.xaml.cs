@@ -15,11 +15,10 @@ using Entity;
 
 namespace Lab07Demo
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        private int? editedProductId = null; // Para saber si estamos editando
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,17 +26,13 @@ namespace Lab07Demo
 
         private void Read_Click(object sender, RoutedEventArgs e)
         {
-
             var business = new BProduct();
             var products = business.Read();
-
             ItemsDataGrid.ItemsSource = products;
-
         }
 
-        private void Create_Click(object sender, RoutedEventArgs e)
+        private void CreateOrUpdate_Click(object sender, RoutedEventArgs e)
         {
-
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
                 MessageBox.Show("Name es requerido."); return;
@@ -53,27 +48,110 @@ namespace Lab07Demo
                 MessageBox.Show("Stock inválido."); return;
             }
 
-            var product = new Product
-            {
-                Name = txtName.Text.Trim(),
-                Price = price,
-                Stock = stock
-            };
+            var business = new BProduct();
 
-            try
+            if (editedProductId == null)
             {
-                var business = new BProduct();
-                business.Create(product);
-                MessageBox.Show("Product Created.");
+                // Crear producto nuevo
+                var product = new Product
+                {
+                    Name = txtName.Text.Trim(),
+                    Price = price,
+                    Stock = stock
+                };
+
+                try
+                {
+                    business.Create(product);
+                    MessageBox.Show("Product Created.");
+                    Read_Click(null, null);
+                    ClearForm();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Error: {ex.Message}"); 
+                // Actualizar producto existente
+                var product = new Product
+                {
+                    ProductID = editedProductId.Value,
+                    Name = txtName.Text.Trim(),
+                    Price = price,
+                    Stock = stock
+                };
+
+                try
+                {
+                    business.Update(product);
+                    MessageBox.Show("Product Updated.");
+                    Read_Click(null, null);
+                    ClearForm();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
             }
-           
-          
+        }
 
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is Product product)
+            {
+                editedProductId = product.ProductID;
+                txtName.Text = product.Name;
+                txtPrice.Text = product.Price.ToString(CultureInfo.InvariantCulture);
+                txtStock.Text = product.Stock.ToString();
+                btnCreateOrUpdate.Content = "Update";
+                btnCancelEdit.Visibility = Visibility.Visible;
+            }
+        }
 
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is Product product)
+            {
+                if (MessageBox.Show($"¿Desea eliminar el producto '{product.Name}'?", "Confirmar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    var business = new BProduct();
+                    business.Delete(product.ProductID);
+                    MessageBox.Show("Product deleted (logical).");
+                    Read_Click(null, null);
+                    ClearForm();
+                }
+            }
+        }
+
+        private void CancelEdit_Click(object sender, RoutedEventArgs e)
+        {
+            ClearForm();
+        }
+
+        private void ClearForm()
+        {
+            editedProductId = null;
+            txtName.Text = "";
+            txtPrice.Text = "";
+            txtStock.Text = "";
+            btnCreateOrUpdate.Content = "Create";
+            btnCancelEdit.Visibility = Visibility.Collapsed;
+        }
+
+        // Método para abrir la ventana de clientes
+        private void Clientes_Click(object sender, RoutedEventArgs e)
+        {
+            var ventanaClientes = new Customer();
+            ventanaClientes.ShowDialog();
+        }
+
+        // Método para abrir la ventana de facturas
+        private void Invoices_Click(object sender, RoutedEventArgs e)
+        {
+            var ventanaFacturas = new Invoice();
+            ventanaFacturas.ShowDialog();
         }
     }
 }

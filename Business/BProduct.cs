@@ -10,16 +10,28 @@ namespace Business
 {
     public class BProduct
     {
-
         public List<Product> Read()
         {
             var data = new DProduct();
             return data.Read();
         }
+
         public void Create(Product product)
         {
             var data = new DProduct();
             data.Create(product);
+        }
+
+        public void Update(Product product)
+        {
+            var data = new DProduct();
+            data.Update(product);
+        }
+
+        public void Delete(int productId)
+        {
+            var data = new DProduct();
+            data.Delete(productId);
         }
     }
 }

@@ -6,12 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Entity;
 using Microsoft.Data.SqlClient;
+
 namespace Data
 {
     public class DProduct
     {
-
- 
         public void Create(Product product)
         {
             using (SqlConnection conn = new SqlConnection(Constant._connectionString))
@@ -19,7 +18,6 @@ namespace Data
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                // Parámetros del SP
                 cmd.Parameters.AddWithValue("@name", product.Name);
                 cmd.Parameters.AddWithValue("@price", product.Price);
                 cmd.Parameters.AddWithValue("@stock", product.Stock);
@@ -27,8 +25,8 @@ namespace Data
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
-
         }
+
         public List<Product> Read()
         {
             var products = new List<Product>();
@@ -59,14 +57,36 @@ namespace Data
 
             return products;
         }
+
         public void Update(Product product)
         {
+            using (SqlConnection conn = new SqlConnection(Constant._connectionString))
+            using (SqlCommand cmd = new SqlCommand("sp_update_product", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
 
+                cmd.Parameters.AddWithValue("@product_id", product.ProductID);
+                cmd.Parameters.AddWithValue("@name", product.Name);
+                cmd.Parameters.AddWithValue("@price", product.Price);
+                cmd.Parameters.AddWithValue("@stock", product.Stock);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
-        public void Delete(Product product)
+
+        public void Delete(int productId)
         {
+            // Elimina de forma lógica (Active = 0)
+            using (SqlConnection conn = new SqlConnection(Constant._connectionString))
+            using (SqlCommand cmd = new SqlCommand("sp_delete_product", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@product_id", productId);
 
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
-
     }
 }
