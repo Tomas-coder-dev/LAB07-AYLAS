@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Business;
 
 namespace Lab07Demo
 {
@@ -23,6 +24,11 @@ namespace Lab07Demo
 
         private void Read_Click(object sender, RoutedEventArgs e)
         {
+
+            var business = new BProduct();
+            var products = business.Read();
+
+            ItemsDataGrid.ItemsSource = products;
 
         }
     }

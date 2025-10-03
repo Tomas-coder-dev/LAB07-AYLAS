@@ -14,7 +14,17 @@
         <StackPanel Orientation="Horizontal" Margin="10">
             <Button Name="Read" Content="GetAll" Click="Read_Click" Margin="5"/>
         </StackPanel>
-        <DataGrid Name="ItemsDataGrid" Grid.Row="1" Margin="10"/>
-
+  
+        <DataGrid x:Name="ItemsDataGrid"  Grid.Row="1" Margin="10"
+          AutoGenerateColumns="False" 
+          ItemsSource="{Binding Products}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ProductID" Binding="{Binding ProductID}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
+                <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" />
+                <!-- No agregamos Active -->
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
