@@ -16,5 +16,10 @@ namespace Business
             var data = new DProduct();
             return data.Read();
         }
+        public void Create(Product product)
+        {
+            var data = new DProduct();
+            data.Create(product);
+        }
     }
 }

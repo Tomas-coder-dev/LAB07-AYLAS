@@ -11,19 +11,53 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="10">
-            <Button Name="Read" Content="GetAll" Click="Read_Click" Margin="5"/>
-        </StackPanel>
-  
-        <DataGrid x:Name="ItemsDataGrid"  Grid.Row="1" Margin="10"
-          AutoGenerateColumns="False" 
-          ItemsSource="{Binding Products}">
+
+        <!-- Encabezado con formulario de creación -->
+        <Border Margin="10" Padding="10" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Campo Name -->
+                <TextBlock Text="Name:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="txtName" Grid.Column="1" Width="200" />
+
+                <!-- Campo Price -->
+                <TextBlock Grid.Column="3" Text="Price:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="txtPrice" Grid.Column="4" Width="100" />
+
+                <!-- Fila 2: Stock + Botones -->
+                <TextBlock Grid.Row="1" Text="Stock:" VerticalAlignment="Center" Margin="0,10,6,0"/>
+                <TextBox x:Name="txtStock" Grid.Row="1" Grid.Column="1" Width="120" Margin="0,10,0,0"/>
+
+                <StackPanel Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3"
+                        Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Name="Read"  Content="GetAll"  Click="Read_Click"  Margin="0,0,8,0" Width="90"/>
+                    <Button Name="Create" Content="Create" Click="Create_Click" Width="90"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Grilla de productos -->
+        <DataGrid x:Name="ItemsDataGrid" Grid.Row="1" Margin="10"
+              AutoGenerateColumns="False"
+              ItemsSource="{Binding Products}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ProductID" Binding="{Binding ProductID}" />
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
-                <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" />
-                <!-- No agregamos Active -->
+                <DataGridTextColumn Header="Name"      Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Price"     Binding="{Binding Price}" />
+                <DataGridTextColumn Header="Stock"     Binding="{Binding Stock}" />
+                <!-- No mostramos Active -->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

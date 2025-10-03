@@ -14,7 +14,20 @@ namespace Data
  
         public void Create(Product product)
         {
-           
+            using (SqlConnection conn = new SqlConnection(Constant._connectionString))
+            using (SqlCommand cmd = new SqlCommand("sp_insert_product", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // Parámetros del SP
+                cmd.Parameters.AddWithValue("@name", product.Name);
+                cmd.Parameters.AddWithValue("@price", product.Price);
+                cmd.Parameters.AddWithValue("@stock", product.Stock);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
         }
         public List<Product> Read()
         {
